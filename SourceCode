@@ -1,0 +1,52 @@
+#include <Servo.h>
+Servo myMotor;
+
+int piezoPin = 8;
+int servoPin = 3;
+int interval = 100;
+int LED = 7;
+int delayTime1 = 1000;
+int delayTime2 = delayTime1;
+int play = 0;
+int frequency = 2000;
+int quiet = 500;
+int waitTime = 10000;
+
+void setup() {
+  myMotor.attach(servoPin);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int switchVal = digitalRead(LED);
+  /*Tone needs 2 arguments, but can take three
+    1) Pin#
+    2) Frequency - this is in hertz (cycles per second) which determines the pitch of the noise made
+    3) Duration - how long teh tone plays
+  */
+  if (switchVal == 1 && delayTime2 > 50 && play == 4){
+    delayTime2 -= 100;
+    play = 0;
+  }
+
+  if (switchVal == 1 && play != quiet){
+    tone(piezoPin, frequency, interval);
+    delay(delayTime2);  
+    play++;
+  }
+
+  //move motor when done beeping
+  if (play == quiet){
+    myMotor.write(90);
+    //wait a little so that the user can take the prize
+    delay(waitTime);
+    //reset parameters
+    delayTime2 = delayTime1;
+    play = 0;
+    myMotor.write(175);
+  }
+  
+  Serial.print(play);
+  Serial.print(" ");
+  Serial.println(delayTime2);
+}
