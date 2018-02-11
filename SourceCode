@@ -19,17 +19,19 @@ void setup() {
 
 void loop() {
   int switchVal = digitalRead(LED);
-  /*Tone needs 2 arguments, but can take three
-    1) Pin#
-    2) Frequency - this is in hertz (cycles per second) which determines the pitch of the noise made
-    3) Duration - how long teh tone plays
-  */
+  //decreases interval between beeps and resets # of plays
   if (switchVal == 1 && delayTime2 > 50 && play == 4){
     delayTime2 -= 100;
     play = 0;
   }
 
+  //beeping
   if (switchVal == 1 && play != quiet){
+    /*Tone needs 2 arguments, but can take three
+    1) Pin#
+    2) Frequency - this is in hertz (cycles per second) which determines the pitch of the noise made
+    3) Duration - how long teh tone plays
+    */
     tone(piezoPin, frequency, interval);
     delay(delayTime2);  
     play++;
